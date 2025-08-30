@@ -1,7 +1,7 @@
 # DeduKt Language of Reasoning
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Version](https://img.shields.io/badge/version-0.0.1--SNAPSHOT-orange)](https://github.com/iskdevelop/dedukt-language)
+[![Version](https://img.shields.io/badge/version-0.0.1--SNAPSHOT-orange)](https://github.com/iskdevelop/dedukt-lang)
 [![Kotlin](https://img.shields.io/badge/kotlin-2.0.20-blue.svg)](https://kotlinlang.org)
 [![JVM](https://img.shields.io/badge/JVM-21-red.svg)](https://openjdk.org)
 
@@ -68,7 +68,7 @@ The project is currently in active development, with the language kernel being t
 DeduKt is part of a comprehensive mathematical computation ecosystem:
 
 - **[Kompute](https://github.com/iskdevelop/kompute)**: High-performance numerical computation library
-- **[DeduKt Ecosystem](https://github.com/iskportal)**: Complete system including LSP, notebook interface, and documentation
+- **[DeduKt Ecosystem](https://github.com/iskdevelop/dedukt)**: Complete system including LSP, notebook interface, and documentation
 
 ## Philosophy
 
