@@ -1,0 +1,24 @@
+package org.isk.dedukt.tests.fileheader
+
+
+{x + y}.print
+
+fun primeAlert (expression: T) -> String
+ where T <: PositiveNumber
+ {
+    if expression containsOperator + {
+
+        return "Expression has a summation"
+
+    } else {
+
+        where expression isPrime {
+            true -> return "Expression is Prime"
+            false -> return "Expression is not Prime"
+            default -> return "Don't know what this expression means!"
+        }
+
+    }
+
+}
+
