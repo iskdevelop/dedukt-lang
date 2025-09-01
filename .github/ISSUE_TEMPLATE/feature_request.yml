@@ -1,0 +1,167 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for DeduKt Language of Reasoning
+title: "[FEATURE] "
+labels: ["enhancement", "needs-discussion"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature! Please provide as much detail as possible.
+        
+        **Note**: This repository is for the DeduKt language kernel (interpreter, compiler, parser, lexer).
+        For feature requests related to IDE plugins, notebooks, or other ecosystem components, please use the appropriate repository.
+
+  - type: checkboxes
+    id: component
+    attributes:
+      label: Component
+      description: Which component would this feature affect? (Select all that apply)
+      options:
+        - label: Language Syntax/Grammar
+        - label: Parser/Lexer
+        - label: Interpreter
+        - label: Compiler
+        - label: CLI Interface
+        - label: Interactive Shell (REPL)
+        - label: Type System
+        - label: Symbolic Engine
+        - label: Mathematical Structures
+        - label: Standard Library
+        - label: Performance Optimization
+
+  - type: dropdown
+    id: feature_type
+    attributes:
+      label: Feature Type
+      description: What type of feature is this?
+      options:
+        - New Language Feature
+        - Mathematical Structure
+        - Algorithm Implementation
+        - Performance Enhancement
+        - Developer Tool
+        - API Enhancement
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: A brief, clear summary of the feature you're requesting
+      placeholder: Provide a concise description of the proposed feature
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation and Use Case
+      description: Why is this feature needed? What problem does it solve?
+      placeholder: |
+        - What mathematical or computational problem would this solve?
+        - Who would benefit from this feature?
+        - How does this align with DeduKt's goals?
+    validations:
+      required: true
+
+  - type: textarea
+    id: detailed_description
+    attributes:
+      label: Detailed Description
+      description: Provide a detailed description of how the feature should work
+      placeholder: |
+        Explain the feature in detail:
+        - How should it behave?
+        - What should the API/syntax look like?
+        - How should it integrate with existing functionality?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_syntax
+    attributes:
+      label: Proposed Syntax/API
+      description: If applicable, provide examples of how the feature would be used
+      render: kotlin
+      placeholder: |
+        // Example of proposed syntax or API usage
+        val example = newFeature {
+            // demonstrate the feature
+        }
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What alternative solutions or features have you considered?
+      placeholder: |
+        - Alternative approaches you've considered
+        - Why the proposed solution is better
+        - How other systems handle this problem
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would be helpful
+        - High - Important for my use case
+        - Critical - Blocking my work
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Low - Minor addition
+        - Medium - Moderate effort
+        - High - Significant undertaking
+        - Unknown - Not sure
+
+  - type: textarea
+    id: implementation_hints
+    attributes:
+      label: Implementation Hints
+      description: If you have ideas about how this could be implemented, please share them
+      placeholder: |
+        Any thoughts on:
+        - Potential implementation approaches
+        - Relevant algorithms or mathematical concepts
+        - Similar features in other systems
+        - Potential challenges or considerations
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any other context, links, or references that would be helpful
+      placeholder: |
+        - Links to relevant papers or documentation
+        - Examples from other systems
+        - Screenshots or diagrams
+        - Related issues or discussions
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to make sure this is not a duplicate
+          required: true
+        - label: This feature request is for the DeduKt language kernel specifically
+          required: true
+        - label: I have provided a clear description of the feature and its motivation
+          required: true
+        - label: I understand this is currently a 0.0.1-SNAPSHOT project and features will be prioritized accordingly
+          required: true

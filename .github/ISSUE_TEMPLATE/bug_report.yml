@@ -1,0 +1,128 @@
+name: Bug Report
+description: Report a bug or issue with DeduKt Language of Reasoning
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out this form as completely as possible.
+        
+        **Note**: This repository is for the DeduKt language kernel (interpreter, compiler, parser, lexer). 
+        For issues with IDE plugins, notebooks, or other ecosystem components, please use the appropriate repository.
+
+  - type: checkboxes
+    id: component
+    attributes:
+      label: Component
+      description: Which component is affected? (Select all that apply)
+      options:
+        - label: Parser/Lexer (ANTLR grammar)
+        - label: Interpreter (Kotlin implementation)
+        - label: Compiler (C++ implementation)
+        - label: CLI Interface
+        - label: Interactive Shell (REPL)
+        - label: Type System
+        - label: Symbolic Engine
+        - label: Mathematical Structures
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of DeduKt are you using?
+      placeholder: "0.0.1-SNAPSHOT"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please provide your environment details
+      placeholder: |
+        - OS: [e.g., Ubuntu 22.04, macOS 14.1, Windows 11]
+        - JVM Version: [e.g., OpenJDK 21.0.1]
+        - Kotlin Version: [e.g., 2.0.20]
+        - Build Tool: [e.g., Gradle 8.4]
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe what happened and what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior
+      placeholder: |
+        1. Create a DeduKt file with '...'
+        2. Run command '...'
+        3. Enter expression '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened (include error messages, stack traces, etc.)
+    validations:
+      required: true
+
+  - type: textarea
+    id: minimal_example
+    attributes:
+      label: Minimal Code Example
+      description: If applicable, provide a minimal DeduKt code example that demonstrates the issue
+      render: kotlin
+      placeholder: |
+        // Minimal DeduKt code that reproduces the issue
+        val example = ...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and Error Messages
+      description: Please include any relevant log output or error messages
+      render: shell
+      placeholder: Paste logs here...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here (screenshots, related issues, etc.)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to make sure this is not a duplicate
+          required: true
+        - label: I have provided a clear description of the problem
+          required: true
+        - label: I have included steps to reproduce the issue
+          required: true
+        - label: I understand this is for the DeduKt language kernel only
+          required: true

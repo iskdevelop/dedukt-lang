@@ -1,0 +1,137 @@
+name: Question/Discussion
+description: Ask a question or start a discussion about DeduKt Language of Reasoning
+title: "[QUESTION] "
+labels: ["question", "discussion"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome! This is the place to ask questions about DeduKt or start discussions about the language design and implementation.
+        
+        **Note**: This repository is for the DeduKt language kernel. For questions about other ecosystem components, please use the appropriate repository.
+
+  - type: checkboxes
+    id: topic
+    attributes:
+      label: Topic Area
+      description: What is your question about? (Select all that apply)
+      options:
+        - label: Language Design/Syntax
+        - label: Mathematical Type System
+        - label: Symbolic Reasoning
+        - label: Parser/Grammar
+        - label: Interpreter Implementation
+        - label: Compiler Design
+        - label: CLI Usage
+        - label: Interactive Shell
+        - label: Performance
+        - label: Mathematical Structures
+        - label: Integration with Kompute
+        - label: Contributing/Development
+        - label: Project Direction/Roadmap
+
+  - type: dropdown
+    id: question_type
+    attributes:
+      label: Question Type
+      description: What kind of question is this?
+      options:
+        - How to use a feature
+        - Understanding language behavior
+        - Design philosophy
+        - Implementation details
+        - Mathematical concepts
+        - Performance considerations
+        - Development/Contributing
+        - General discussion
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: Please ask your question clearly and provide context
+      placeholder: |
+        Be as specific as possible:
+        - What are you trying to understand or accomplish?
+        - What have you already tried?
+        - What specific aspect needs clarification?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and Background
+      description: Provide any relevant context that would help answer your question
+      placeholder: |
+        - Your experience level with symbolic computation
+        - Specific use case or goal
+        - Related mathematical concepts
+        - Other systems you've worked with
+
+  - type: textarea
+    id: attempted_solutions
+    attributes:
+      label: What Have You Tried?
+      description: If applicable, describe what you've already attempted
+      placeholder: |
+        - Documentation sections you've read
+        - Code you've tried
+        - Searches you've done
+        - Similar issues you've found
+
+  - type: textarea
+    id: code_example
+    attributes:
+      label: Code Example
+      description: If relevant, provide a code example or snippet
+      render: kotlin
+      placeholder: |
+        // Your DeduKt code or pseudocode
+        val example = ...
+
+  - type: textarea
+    id: expected_outcome
+    attributes:
+      label: Expected Outcome
+      description: If applicable, what outcome or behavior are you expecting?
+      placeholder: What result or behavior are you hoping to achieve?
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      description: How urgent is getting an answer to this question?
+      options:
+        - Low - General curiosity
+        - Medium - Would help with current work
+        - High - Blocking current progress
+        - Just for discussion
+
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: Additional Information
+      description: Any other information that might be helpful
+      placeholder: |
+        - Links to relevant resources
+        - Screenshots or diagrams
+        - Related mathematical papers or concepts
+        - Comparison with other systems
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues and discussions for similar questions
+          required: true
+        - label: My question is related to the DeduKt language kernel specifically
+          required: true
+        - label: I have provided sufficient context for others to understand my question
+          required: true
