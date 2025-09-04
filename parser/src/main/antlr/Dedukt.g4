@@ -55,8 +55,21 @@ packageDeclaration
  *
  * Examples: std, math.algebra, com.example.utils
  */
+
 packageIdentifier
-    : identifier (Dot identifier)*
+    : packageIdentifierNode (Dot packageIdentifierNode)*
+    ;
+packageIdentifierNode
+    : identifier
+    | Where | Default |Continue | Break | This | Super |File | Field | Property | Get | Set
+    | Reciever | Param | SetParam | Delegate | Package | Import | Type | Notation | Operator | Fun
+    | Context | Structure | Axiom | Rule | Notation | Theory | Val | Var | Const | TypeAlias
+    | Constructor | By | Companion | Init | This | TypeOf | If | Else | When | Finally | Case
+    | Try | Catch | Gaurd | For | Do | While | Throw | Jump | As | Is | In | Out | Dynamic
+    | Public | Private | Protected | Internal | Enum | Sealed | Annotation | Data
+    | Inner | Tailrec | Inline | External | Suspend | Override | Abstract | Final | Open
+    | Lateinit | Vararg | NoInline | Crossline | Reified | Assert | Read | Print | Debug
+    | Write | Close
     ;
 
 /**
@@ -90,7 +103,7 @@ importStatement
  * Consists of zero or more statements that define the program logic
  */
 body
-    : statement*
+    : statement+
     ;
 
 /**
@@ -1782,6 +1795,29 @@ Crossline
 Reified
     : 'reified'     // Reified type parameter (runtime type info preserved)
     ;
+
+
+Assert
+    : 'assert'
+    ;
+Read
+    : 'read'
+    ;
+String
+    : DoubleQuote ~["] DoubleQuote
+    ;
+Print
+    : 'print'
+    ;
+Close
+    : 'close'
+    ;
+Write
+    : 'write'
+    ;
+Debug
+    : 'debug'
+    ;
 // Quoted identifiers - anything between backticks
 QUOTED_ID
     : '`' (~'`')* '`'
@@ -1810,23 +1846,4 @@ Identifier
     : QUOTED_ID
     | SIMPLE_ID
     | COMPLEX_ID
-    ;
-
-Read
-    : 'read'
-    ;
-String
-    : DoubleQuote ~["] DoubleQuote
-    ;
-Print
-    : 'print'
-    ;
-Close
-    : 'close'
-    ;
-Write
-    : 'write'
-    ;
-Debug
-    : 'debug'
     ;
