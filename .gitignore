@@ -22,3 +22,13 @@ gradle-app.setting
 
 # Ignore Gradle build output directory
 build
+/.idea/dictionaries/project.xml
+/.idea/modules/dedukt-lang.iml
+/.idea/.gitignore
+/.idea/AndroidProjectSystem.xml
+/.idea/compiler.xml
+/.idea/gradle.xml
+/.idea/kotlinc.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
