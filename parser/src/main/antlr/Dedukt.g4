@@ -5,6 +5,7 @@
 // This is being used to create the parser and lexer.
 grammar Dedukt;
 
+
 // =============================================================================
 // SOURCE CODE STRUCTURE
 // =============================================================================
@@ -46,7 +47,7 @@ header
  * Example: package mathematics.linear_algebra.vectors
  */
 packageDeclaration
-    : Package WS* packageIdentifier NL*
+    : Package SpaceOrTab* packageIdentifier NL*
     ;
 
 /**
@@ -61,15 +62,6 @@ packageIdentifier
     ;
 packageIdentifierNode
     : identifier
-    | Where | Default |Continue | Break | This | Super |File | Field | Property | Get | Set
-    | Reciever | Param | SetParam | Delegate | Package | Import | Type | Notation | Operator | Fun
-    | Context | Structure | Axiom | Rule | Notation | Theory | Val | Var | Const | TypeAlias
-    | Constructor | By | Companion | Init | This | TypeOf | If | Else | When | Finally | Case
-    | Try | Catch | Gaurd | For | Do | While | Throw | Jump | As | Is | In | Out | Dynamic
-    | Public | Private | Protected | Internal | Enum | Sealed | Annotation | Data
-    | Inner | Tailrec | Inline | External | Suspend | Override | Abstract | Final | Open
-    | Lateinit | Vararg | NoInline | Crossline | Reified | Assert | Read | Print | Debug
-    | Write | Close
     ;
 
 /**
@@ -91,7 +83,7 @@ importList
  *   import math.algebra.*
  */
 importStatement
-    : Import WS* packageIdentifier (Dot Star)? NL*
+    : Import SpaceOrTab* packageIdentifier (Dot Star)? NL*
     ;
 
 // =============================================================================
@@ -138,7 +130,7 @@ application
    | jump
    | variableOperation
    | errorHandling
-   | ioOperation
+//   | ioOperation
 //   | memoryOperation
    | debugOperation
    ;
@@ -232,7 +224,7 @@ multipleIdentifiers
 *   process{data.field}    // Function with complex argument
 */
 functionCall
-   : identifier LCurl argumentList? RCurl
+   : identifier LBrace argumentList? RBrace
    ;
 
 /**
@@ -308,7 +300,7 @@ caseStatements
  *   when hasPermission -> allow | isGuest -> restricted | else -> deny
  */
 whenStatement
-    : When expression ((Vert expression Arrow expression)+ Vert defaultStatement | LCurl caseStatements RCurl)
+    : When expression ((Vert expression Arrow expression)+ Vert defaultStatement | LBrace caseStatements RBrace)
     ;
 
 /**
@@ -334,7 +326,7 @@ guardStatement
  *   hasValue ? getValue{} : defaultValue
  */
 ternaryExpression
-    : expression QuestionMarK expression Colon expression
+    : expression QuestionMark expression Colon expression
     ;
 // =============================================================================
 // LOOP STATEMENTS - Iterative Control Flow
@@ -490,7 +482,7 @@ variableOperation
  *   name = getName{}
  */
 assignment
-    : (Val | Var | Const)? identifier subTyping Assigment expression
+    : (Val | Var | Const)? identifier subTyping Assignment expression
     ;
 
 
@@ -581,83 +573,6 @@ tryStatement
     : Try loopBody (Catch loopBody)? (Finally loopBody)?
     ;
 
-// =============================================================================
-// I/O OPERATIONS - Input/Output Statements
-// =============================================================================
-
-/**
- * I/O operation - input and output statement constructs
- * Supports printing, reading, and file operations
- *
- * Syntax: <printStatement> | <inputStatement> | <fileOperation>
- */
-ioOperation
-    : printStatement
-    | inputStatement
-    | fileOperation
-    ;
-
-/**
- * Print statement - output data to console or stream
- * Displays values to standard output or specified output stream
- *
- * Syntax: print <expression> [to <stream>]
- * Examples:
- *   print "Hello World"
- *   print result
- *   print data to file
- */
-printStatement
-    : Print String
-    ;
-
-/**
- * Input statement - read data from console or stream
- * Reads values from standard input or specified input stream
- *
- * Syntax: read <identifier> [from <stream>]
- * Examples:
- *   read userInput
- *   read data from file
- *   read line from stdin
- */
-inputStatement
-    : Read String
-    ;
-
-/**
- * File operation - file system interaction statements
- * Supports file reading, writing, opening, and closing operations
- *
- * Syntax: <fileRead> | <fileWrite> | <fileOpen> | <fileClose>
- * Examples:
- *   open file{"data.txt"} as handle
- *   write content to file
- *   read content from file
- *   close fileHandle
- */
-fileOperation
-    : fileRead
-    | fileWrite
-    | fileOpen
-    | fileClose
-    ;
-
-fileRead
-    : File inputStatement
-    ;
-
-fileWrite
-    : File Write String
-    ;
-
-fileOpen
-    : File String identifier loopBody
-    ;
-
-fileClose
-    : Close identifier
-    ;
 
 //// =============================================================================
 //// MEMORY/RESOURCE OPERATIONS - Resource Management
@@ -877,7 +792,6 @@ declaration
     | axiomDeclaration       // Define mathematical axioms
     | ruleDeclaration        // Define transformation rules
     | annotationDeclaration //  Define annotations
-    | propertyDeclaration
     ;
 
 // =============================================================================
@@ -1174,7 +1088,7 @@ annotationDeclaration
  * Contains annotation processing rules and associated data
  */
 annotationContext
-    : LCurl statement* RCurl
+    : LBrace statement* RBrace
     ;
 
 // =============================================================================
@@ -1186,7 +1100,7 @@ annotationContext
  * Used for general-purpose scoping and evaluation
  */
 headlessFunction
-    : LCurl statement*  returnable? RCurl
+    : LBrace statement*  returnable? RBrace
     ;
 
 /**
@@ -1202,7 +1116,7 @@ returnable
  * May include type constraints, relationships, and properties
  */
 typeContext
-    : LCurl statement* RCurl
+    : LBrace statement* RBrace
     ;
 
 /**
@@ -1210,7 +1124,7 @@ typeContext
  * Contains syntax transformation rules and precedence definitions
  */
 notationContext
-    : LCurl statement* RCurl
+    : LBrace statement* RBrace
     ;
 
 
@@ -1219,7 +1133,7 @@ notationContext
  * Contains operator implementation, precedence, and associativity rules
  */
 operatorContext
-    : LCurl statement* RCurl
+    : LBrace statement* RBrace
     ;
 
 /**
@@ -1227,7 +1141,7 @@ operatorContext
  * Includes elements, operations, properties, and internal relationships
  */
 structureContext
-    : LCurl statement* RCurl
+    : LBrace statement* RBrace
     ;
 
 /**
@@ -1235,7 +1149,7 @@ structureContext
  * Includes multiple structures, their relationships, and unified properties
  */
 theoryContext
-    : LCurl statement* RCurl
+    : LBrace statement* RBrace
     ;
 
 /**
@@ -1243,7 +1157,7 @@ theoryContext
  * Includes the fundamental rule and its applicability conditions
  */
 axiomContext
-    : LCurl statement* RCurl
+    : LBrace statement* RBrace
     ;
 
 /**
@@ -1251,14 +1165,7 @@ axiomContext
  * Includes pattern matching conditions and transformation logic
  */
 ruleContext
-    : LCurl statement* RCurl
-    ;
-
-// =============================================================================
-// PROPERTY DECLARATION - giving properties to different objects
-// =============================================================================
-propertyDeclaration
-    : Property identifier (Assigment headlessFunction)?
+    : LBrace statement* RBrace
     ;
 
 
@@ -1296,554 +1203,12 @@ commaSeparatedTypedIdentifiers
  *   - QUOTED_ID: Quoted identifiers for reserved words (`class`, `type`)
  */
 identifier
-    : SIMPLE_ID
-    | COMPLEX_ID
-    | QUOTED_ID
+    : IdentifierOrSoftKeyword
+    | LatexStyleIdentifier
     ;
 
 literal
     : identifier
     | Number
     | DecimalNumber
-    ;
-// =============================================================================
-// Lexical Grammar of DeduKt Language
-// =============================================================================
-// LINE ENDINGS AND SPECIAL CHARACTERS
-// These rules handle different line ending conventions and special file markers
-
-
-// Shebang line for executable scripts (e.g., #!/usr/bin/env kotlin)
-ShebangLine
-    : '#!'     // Match shebang followed by any characters until line end
-    ;
-
-// COMMENTS AND WHITESPACE
-// Support for both single-line and multi-line comments with proper nesting
-
-// Multi-line comments with support for nested comments
-DelimitedComment
-    : '/*' (DelimitedComment | .)*? '*/' -> channel(HIDDEN)     // Recursive rule allows nested /* */ comments
-    ;
-
-// Single-line comments extending to end of line
-LineComment
-    : '//' ~[\r\n]* -> channel(HIDDEN)    // Match // followed by any non-newline characters
-    ;
-
-// Horizontal whitespace (spaces, tabs, form feed)
-WS
-    : [ \t\u000C] -> channel(HIDDEN)       // Space, tab, form feed - excludes newlines
-    ;
-
-// Normalized newline handling - treats all line ending styles uniformly
-NL
-    : ('\n' | '\r\n' | '\r')  -> channel(HIDDEN)    // Matches LF (\n) or CRLF (\r\n) or CR alone
-    ;
-
-// RESERVED SYMBOLS AND PUNCTUATION
-// Core punctuation and reserved symbols used throughout the language
-
-Reserved
-    : '...'         // Variadic/spread operator or placeholder
-    ;
-Dot
-    : '.'           // Member access, decimal point
-    ;
-Comma
-    : ','            // Parameter/argument separator
-    ;
-
-// Paired delimiters for grouping and scope
-LParen
-    : '('           // Left parenthesis - function calls, grouping
-    ;
-RParen
-    : ')'           // Right parenthesis
-    ;
-LSquare
-    : '['           // Left square bracket - array/list indexing, annotations
-    ;
-RSquare
-    : ']'           // Right square bracket
-    ;
-LCurl
-    : '{'           // Left curly brace - code blocks, object literals
-    ;
-RCurl
-    : '}'           // Right curly brace
-    ;
-
-// Special symbols
-Star
-    : '*'           // Multiplication, import wildcard, pointer dereference
-    ;
-Sub
-    : '_'           // Underscore - unused variables, number separators
-    ;
-
-// LOGICAL OPERATORS
-// Boolean logic operators with both symbolic and word forms
-
-Conj
-    : '&&'          // Logical AND (short-circuiting)
-    | 'and'         // Alternative word form for logical AND
-    ;
-Disj
-    : '||'          // Logical OR (short-circuiting)
-    | 'or'          // Alternative word form for logical OR
-    ;
-Vert
-    : '|'
-    ;
-
-// NEGATION/EXCLUSION OPERATORS
-// Different forms of negation based on whitespace context
-
-Exclusion
-    : '!'     // Negation followed by whitespace (logical NOT)
-    ;
-
-
-// COLONS AND SEMICOLONS
-// Various colon and semicolon forms for different syntactic purposes
-Colon
-    : ':'           // Type annotations, labels, case separators
-    ;
-SemiColon
-    : ';'           // Statement terminator
-    ;
-DoubleColon
-    : '::'          // Applicability
-    ;
-DoubleSemiColon
-    : ';;'          // Special statement separator
-    ;
-
-// ASSIGNMENT AND ARROWS
-// Assignment operators and arrow notation for lambdas/functions
-
-Assigment
-    : '='           // Simple assignment
-    ;
-Arrow
-    : '->'          // Lambda arrow, function types
-    ;
-DoubleArrow
-    : '=>'          // Enhanced arrow (when expressions, case branches)
-    ;
-
-
-// RANGE AND SPECIAL SYMBOLS
-Range
-    : '..'          // Range operator (1..10)
-    ;
-Hash
-    : '#'           // Hash symbol - possibly for annotations or special syntax
-    ;
-
-// AT SYMBOL VARIANTS
-// Different @ symbol contexts for annotations and labels with whitespace sensitivity
-
-At
-    : '@'           // @ without surrounding whitespace
-    ;
-
-// QUESTION MARK VARIANTS
-// Nullable types and optional operations with whitespace sensitivity
-
-QuestionMarK
-    : '?'    // ? followed by whitespace (ternary operator start)
-    ;
-
-
-// COMPARISON OPERATORS
-// Relational and equality operators
-// Angle brackets - comparison and generic type parameters
-LAngle
-    : '<'           // Less than, generic type parameter start
-    ;
-RAngle
-    : '>'           // Greater than, generic type parameter end
-    ;
-LE
-    : '<='          // Less than or equal
-    ;
-GE
-    : '>='          // Greater than or equal
-    ;
-
-// Equality and inequality operators
-ExclusionEquality
-    : '!='          // Not equal (value)
-    ;
-ExclutionDoubleEquality
-    : '!=='         // Not identical (reference)
-    ;
-DoubleEquality
-    : '=='          // Equal (value comparison)
-    ;
-TripleEquality
-    : '==='         // Identical (reference comparison)
-    ;
-
-
-// TYPE RELATIONSHIP OPERATORS
-AsSafe
-    : 'as?'         // Safe cast operator - returns null if cast fails
-    ;
-SubType
-    : '<:'          // Subtype relationship
-    ;
-SuperType
-    : ':>'          // Supertype relationship
-    ;
-
-// STRING DELIMITERS
-SingleQuote
-    : '\''          // Single quote - character literals
-    ;
-DoubleQuote
-    : '"'           // Double quote - string literals
-    ;
-
-
-// CONTROL FLOW KEYWORDS
-Where
-    : 'where'       // Generic constraints, query conditions
-    ;
-Default
-    : 'default'
-    ;
-// Labeled control flow - allows breaking/continuing/returning to specific labels
-ReturnAt
-    : 'return@' Identifier      // Return to labeled scope
-    ;
-ContinueAt
-    : 'continue@' Identifier    // Continue to labeled loop
-    ;
-BreakAt
-    : 'break@' Identifier       // Break from labeled loop
-    ;
-ThisAt
-    : 'this@' Identifier        // Reference to specific receiver
-    ;
-SuperAt
-    : 'super@' Identifier       // Reference to specific superclass
-    ;
-
-
-// ANNOTATION TARGET KEYWORDS
-// These specify where annotations should be applied
-
-File
-    : 'file'        // File-level annotations
-    ;
-Field
-    : 'field'       // Field annotations (for properties)
-    ;
-Property
-    : 'property'    // Property annotations
-    ;
-Get
-    : 'get'         // Getter annotations
-    ;
-Set
-    : 'set'         // Setter annotations
-    ;
-Reciever
-    : 'reciever'    // Receiver parameter annotations
-    ;
-Param
-    : 'param'       // Parameter annotations
-    ;
-SetParam
-    : 'setparam'    // Setter parameter annotations
-    ;
-Delegate
-    : 'delegate'    // Delegate annotations
-    ;
-
-// TOP-LEVEL DECLARATION KEYWORDS
-Package
-    : 'package'     // Package declaration
-    ;
-Import
-    : 'import'      // Import declaration
-    ;
-Type
-    : 'type'        // Type declaration/alias
-    ;
-Operator
-    : 'operator'    // Operator overloading
-    ;
-Fun
-    : 'fun'         // Function declaration
-    ;
-
-// MATHEMATICAL/FORMAL SYSTEM KEYWORDS
-// Keywords for mathematical or formal reasoning constructs
-
-Context
-    : 'context'     // Context parameters/receivers
-    ;
-Structure
-    : 'structure'   // Mathematical structure definition
-    ;
-Axiom
-    : 'axiom'       // Axiomatic definitions
-    ;
-Rule
-    : 'rule'        // Inference or transformation rules
-    ;
-Notation
-    : 'notation'    // Notation definitions
-    ;
-Theory
-    : 'theory'      // Theory definitions
-    ;
-
-
-// VARIABLE AND TYPE DECLARATION KEYWORDS
-Val
-    : 'val'         // Immutable variable (value)
-    ;
-Var
-    : 'var'         // Mutable variable
-    ;
-TypeAlias
-    : 'typealias'   // Type alias declaration
-    ;
-Constructor
-    : 'constructor' // Constructor declaration
-    ;
-By
-    : 'by'          // Delegation keyword
-    ;
-Companion
-    : 'companion'   // Companion object
-    ;
-Init
-    : 'init'        // Initialization block
-    ;
-
-// REFERENCE KEYWORDS
-This
-    : 'this'        // Current instance reference
-    ;
-Super
-    : 'super'       // Parent class reference
-    ;
-TypeOf
-    : 'typeof'      // Type introspection
-    ;
-
-// CONTROL FLOW STATEMENTS
-// Conditional statements
-If
-    : 'if'          // Conditional statement
-    ;
-Else
-    : 'else'        // Alternative branch
-    ;
-When
-    : 'when'        // Pattern matching/switch statement
-    ;
-Case
-    : 'case'
-    ;
-
-// Exception handling
-Try
-    : 'try'         // Exception handling block
-    ;
-Catch
-    : 'catch'       // Exception catch clause
-    ;
-Finally
-    : 'finally'     // Final execution block
-    ;
-Gaurd
-    : 'gaurd'
-    ;
-// Loop constructs
-For
-    : 'for'         // For loop
-    ;
-Do
-    : 'do'          // Do-while loop
-    ;
-While
-    : 'while'       // While loop
-    ;
-
-// Control flow statements
-Throw
-    : 'throw'       // Throw exception
-    ;
-Return
-    : 'return'      // Return from function
-    ;
-Continue
-    : 'continue'    // Continue loop iteration
-    ;
-Break
-    : 'break'       // Break from loop
-    ;
-Jump
-    : 'jump'
-    ;
-// TYPE CHECKING AND CASTING
-As
-    : 'as'          // Type cast
-    ;
-Is
-    : 'is'          // Type check
-    ;
-In
-    : 'in'          // Containment check, loop iteration
-    ;
-NotIs
-    : '!is'         // Negated type check
-    ;
-NotIn
-    : '!in'         // Negated containment check
-    ;
-Out
-    : 'out'         // Covariant generic parameter
-    ;
-Dynamic
-    : 'dynamic'     // Dynamic typing
-    ;
-
-// VISIBILITY MODIFIERS
-Public
-    : 'public'      // Public visibility
-    ;
-Private
-    : 'private'     // Private visibility
-    ;
-Protected
-    : 'protected'   // Protected visibility
-    ;
-Internal
-    : 'internal'    // Module-internal visibility
-    ;
-
-// CLASS AND INHERITANCE MODIFIERS
-Enum
-    : 'enum'        // Enumeration class
-    ;
-Sealed
-    : 'sealed'      // Sealed class (restricted inheritance)
-    ;
-Annotation
-    : 'annotation'  // Annotation class
-    ;
-Data
-    : 'data'        // Data class (automatic equals/hashCode/toString)
-    ;
-Inner
-    : 'inner'       // Inner class (has reference to outer)
-    ;
-
-
-// FUNCTION MODIFIERS
-Tailrec
-    : 'tailrec'     // Tail-recursive function optimization
-    ;
-Inline
-    : 'inline'      // Inline function (code substitution)
-    ;
-External
-    : 'external'    // External implementation (native/JS)
-    ;
-Suspend
-    : 'suspend'     // Suspending function (coroutines)
-    ;
-Override
-    : 'override'    // Override parent member
-    ;
-Abstract
-    : 'abstract'    // Abstract member (no implementation)
-    ;
-Final
-    : 'final'       // Cannot be overridden
-    ;
-Open
-    : 'open'        // Can be overridden
-    ;
-
-// PROPERTY MODIFIERS
-Const
-    : 'const'       // Compile-time constant
-    ;
-Lateinit
-    : 'lateinit'    // Late initialization (non-null but initialized later)
-    ;
-Vararg
-    : 'vararg'      // Variable number of arguments
-    ;
-
-// INLINE FUNCTION MODIFIERS
-NoInline
-    : 'noinline'    // Don't inline this parameter
-    ;
-Crossline
-    : 'crossline'   // Allow non-local returns from inline lambda
-    ;
-Reified
-    : 'reified'     // Reified type parameter (runtime type info preserved)
-    ;
-
-
-Assert
-    : 'assert'
-    ;
-Read
-    : 'read'
-    ;
-String
-    : DoubleQuote ~["] DoubleQuote
-    ;
-Print
-    : 'print'
-    ;
-Close
-    : 'close'
-    ;
-Write
-    : 'write'
-    ;
-Debug
-    : 'debug'
-    ;
-// Quoted identifiers - anything between backticks
-QUOTED_ID
-    : '`' (~'`')* '`'
-    ;
-
-// Digits
-Number
-    : [0-9]+
-    ;
-
-DecimalNumber
-    : Number Dot Number
-    ;
-// Simple identifiers - letters followed by letters/digits/underscores
-SIMPLE_ID
-    : [a-zA-Z] [a-zA-Z0-9_]*
-    ;
-
-// Complex identifiers - any Unicode except forbidden characters
-COMPLEX_ID
-    : ~[ \t\n\r,{}@.0-9:();"']+
-    ;
-
-// Unified identifier - matches any of the above three
-Identifier
-    : QUOTED_ID
-    | SIMPLE_ID
-    | COMPLEX_ID
     ;
