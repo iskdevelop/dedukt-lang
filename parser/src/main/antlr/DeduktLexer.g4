@@ -48,6 +48,7 @@ Operator: 'operator';
 Structure: 'structure';
 Theory: 'theory';
 Rule: 'rule';
+Abstract: 'abstract';
 
 LatexStyleIdentifier
     : '\\' [a-zA-Z_][a-zA-Z0-9_]*
@@ -57,8 +58,12 @@ MathematicalUnicodeFamily
     | [\u2200-\u22FF]    // Unicode math operators
     ;
 
-IdentifierOrSoftKeyword
+SimpleIdentifier
     : [a-zA-Z_][a-zA-Z0-9_]*
+    ;
+
+IdentifierOrSoftKeyword
+    : SimpleIdentifier
     | Package
     | Import
     | Type
@@ -96,6 +101,7 @@ IdentifierOrSoftKeyword
     | Structure
     | Theory
     | Rule
+    | Abstract
     ;
 // Symbols
 Vert : '|';
@@ -120,8 +126,8 @@ DoubleColon : '::';
 Arrow : '->';
 QuestionMark : '?';
 Assignment : '=';
-
-
+Number: [0-9]+ ;
+DecimalNumber : Number Dot Number;
 StringLiteral
     : '"' ( ~["\\] | '\\' . )* '"'
     | '\'' ( ~['\\] | '\\' . )* '\''

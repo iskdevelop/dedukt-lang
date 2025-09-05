@@ -3,9 +3,11 @@
 // =============================================================================
 // The following file is the main grammar definition for DeduKt language.
 // This is being used to create the parser and lexer.
-grammar Dedukt;
+parser grammar DeduktParser;
 
-
+options {
+    tokenVocab=DeduktLexer;
+}
 // =============================================================================
 // SOURCE CODE STRUCTURE
 // =============================================================================
@@ -58,11 +60,15 @@ packageDeclaration
  */
 
 packageIdentifier
-    : packageIdentifierNode (Dot packageIdentifierNode)*
+    : packageIdentifierNode (Dot packageIdentifierNode )*
     ;
+
 packageIdentifierNode
-    : identifier
-    ;
+    : SimpleIdentifier
+    | Package | Import | Type | Where | If | Else | Case | Default | When | Gaurd | For | While | Do | Break | BreakAt
+    | Continue | ContinueAt | Return | ReturnAt | Jump | Val | Var | Const | Throw | Catch | Finally | Try | Assert
+    | Debug | Context | Notation | Axiom | Fun | Operator | Structure | Theory | Rule | Abstract ;
+
 
 /**
  * Collection of import statements
@@ -486,49 +492,6 @@ assignment
     ;
 
 
-//// =============================================================================
-//// FUNCTION INVOCATIONS - Function and Method Calls
-//// =============================================================================
-//
-///**
-// * Function invocation - all forms of callable execution
-// * Supports function calls, method calls, and procedure calls
-// *
-// * Syntax: <functionCall> | <methodCall> | <procedureCall>
-// */
-//invocation
-//    : functionCall          // Already defined above
-//    | methodCall
-//    | procedureCall
-//    ;
-//
-///**
-// * Method call - function call on an object or instance
-// * Invokes a method with implicit self/this parameter
-// *
-// * Syntax: <object>.<method>{<args>}
-// * Examples:
-// *   object.calculate{x, y}
-// *   list.append{item}
-// *   string.substring{start, end}
-// */
-//methodCall
-//    : // TODO: Implement method call grammar
-//    ;
-//
-///**
-// * Procedure call - function call without return value expectation
-// * Used for side-effect operations or when return value is ignored
-// *
-// * Syntax: <identifier>{<args>}
-// * Examples:
-// *   print{"Hello World"}
-// *   initialize{system}
-// *   cleanup{resources}
-// */
-//procedureCall
-//    : // TODO: Implement procedure call grammar (may be same as functionCall)
-//    ;
 
 // =============================================================================
 // ERROR HANDLING APPLICATIONS - Exception Management
@@ -574,162 +537,6 @@ tryStatement
     ;
 
 
-//// =============================================================================
-//// MEMORY/RESOURCE OPERATIONS - Resource Management
-//// =============================================================================
-//
-///**
-// * Memory/resource operation - memory and resource management statements
-// * Supports allocation, deallocation, and resource management constructs
-// *
-// * Syntax: <allocation> | <deallocation> | <resourceBlock>
-// */
-//memoryOperation
-//    : allocation
-//    | deallocation
-//    | resourceBlock
-//    ;
-//
-///**
-// * Allocation operation - memory or resource allocation
-// * Allocates memory or resources for use
-// *
-// * Syntax: allocate <type> [<size>] | new <type>{<args>}
-// * Examples:
-// *   allocate Array{100}
-// *   new Object{parameters}
-// *   allocate Buffer{size}
-// */
-//allocation
-//    :
-//    ;
-//
-///**
-// * Deallocation operation - memory or resource cleanup
-// * Frees allocated memory or releases resources
-// *
-// * Syntax: deallocate <identifier> | delete <identifier> | free <identifier>
-// * Examples:
-// *   deallocate buffer
-// *   delete object
-// *   free memory
-// */
-//deallocation
-//    : // TODO: Implement deallocation grammar
-//    ;
-//
-///**
-// * Resource block - automatic resource management with cleanup
-// * Ensures resources are properly released after use
-// *
-// * Syntax: with <resource> do <body> | using <resource> in <body>
-// * Examples:
-// *   with file{"data.txt"} do processFile{file}
-// *   using connection{"database"} in executeQuery{connection, query}
-// */
-//resourceBlock
-//    : // TODO: Implement resource management block grammar
-//    ;
-
-//// =============================================================================
-//// SYNCHRONIZATION APPLICATIONS - Concurrency Control
-//// =============================================================================
-//
-///**
-// * Synchronization application - concurrency and parallelism control
-// * Supports locking, async operations, and thread management
-// *
-// * Syntax: <lockOperation> | <asyncOperation> | <threadOperation>
-// */
-//synchronization
-//    : lockOperation
-//    | asyncOperation
-//    | threadOperation
-//    ;
-//
-///**
-// * Lock operation - synchronization primitive operations
-// * Manages locks for thread-safe access to shared resources
-// *
-// * Syntax: lock <resource> | unlock <resource> | synchronized <resource> do <body>
-// * Examples:
-// *   lock mutex
-// *   unlock mutex
-// *   synchronized sharedData do modify{sharedData}
-// */
-//lockOperation
-//    : // TODO: Implement lock/unlock grammar
-//    ;
-//
-///**
-// * Async operation - asynchronous execution control
-// * Supports async/await patterns for non-blocking operations
-// *
-// * Syntax: async <expression> | await <expression>
-// * Examples:
-// *   async fetchData{url}
-// *   await networkCall{}
-// *   async { processInBackground{} }
-// */
-//asyncOperation
-//    : // TODO: Implement async/await grammar
-//    ;
-//
-///**
-// * Thread operation - thread lifecycle management
-// * Supports thread creation, joining, and synchronization
-// *
-// * Syntax: spawn <function> | join <thread> | yield
-// * Examples:
-// *   spawn worker{data}
-// *   join workerThread
-// *   yield                  // Yield execution to other threads
-// */
-//threadOperation
-//    : // TODO: Implement thread spawn/join grammar
-//    ;
-
-//// =============================================================================
-//// EXPRESSION STATEMENTS - Standalone Expression Evaluation
-//// =============================================================================
-//
-///**
-// * Expression statement - standalone expression evaluation
-// * Expressions evaluated for their side effects or ignored return values
-// *
-// * Syntax: <expression>; | <sideEffectExpression>;
-// */
-//expressionStatement
-//    : standaloneExpression
-//    | sideEffectExpression
-//    ;
-//
-///**
-// * Standalone expression - expression evaluated and result discarded
-// * Used when expression is evaluated purely for side effects
-// *
-// * Syntax: <expression>
-// * Examples:
-// *   calculate{x, y}        // Result ignored
-// *   object.method{}        // Called for side effects
-// */
-//standaloneExpression
-//    : // TODO: Implement standalone expression grammar
-//    ;
-//
-///**
-// * Side effect expression - expression with intentional side effects
-// * Expressions that modify state or perform I/O operations
-// *
-// * Syntax: <expression>
-// * Examples:
-// *   counter++              // Modifies counter
-// *   print{message}         // I/O side effect
-// *   list.append{item}      // Modifies list
-// */
-//sideEffectExpression
-//    : // TODO: Implement side effect expression grammar
-//    ;
 
 // =============================================================================
 // DEBUGGING/DEVELOPMENT OPERATIONS - Development Support
@@ -809,7 +616,7 @@ declaration
  *   type Group<T> :: Associative -> { ... }
  */
 typeDeclaration
-    : Type identifier typeOptions? (Assigment typeContext)?
+    : Type identifier typeOptions? (Assignment typeContext)?
     ;
 
 /**
@@ -951,7 +758,7 @@ contextDeclaration
  * Example: notation matrix_multiply :: Matrix -> { ... }
  */
 notationDeclaration
-    : Notation identifier applicability Assigment notationContext
+    : Notation identifier applicability Assignment notationContext
     ;
 
 // =============================================================================
@@ -966,7 +773,7 @@ notationDeclaration
  * Example: fun add<T: Numeric>(x: T, T) -> T :: Number { ... }
  */
 functionDeclaration
-    : Fun identifier parameters? functionTypeFormat parameterOptions? applicability? Assigment headlessFunction
+    : Fun identifier parameters? functionTypeFormat parameterOptions? applicability? Assignment headlessFunction
     ;
 
 /**
@@ -995,7 +802,7 @@ functionTypeFormat
  * Example: operator + <T: Group> where T <: Associative { ... }
  */
 operatorDeclaration
-    : Operator identifier typeOptions? Assigment operatorContext
+    : Operator identifier typeOptions? Assignment operatorContext
     ;
 
 // =============================================================================
@@ -1011,7 +818,7 @@ operatorDeclaration
  * Example: structure Group<T> where T :: Associative { ... }
  */
 structureDeclaration
-    : Structure identifier typeOptions? Assigment structureContext
+    : Structure identifier typeOptions? Assignment structureContext
     ;
 
 // =============================================================================
@@ -1027,7 +834,7 @@ structureDeclaration
  * Example: theory LinearAlgebra<Field> :: VectorSpace { ... }
  */
 theoryDeclaration
-    : Theory identifier typeOptions? Assigment theoryContext
+    : Theory identifier typeOptions? Assignment theoryContext
     ;
 
 // =============================================================================
@@ -1043,7 +850,7 @@ theoryDeclaration
  * Example: axiom associativity<T: Group> :: Associative { ... }
  */
 axiomDeclaration
-    : Axiom identifier typeOptions? Assigment axiomContext
+    : Axiom identifier typeOptions? Assignment axiomContext
     ;
 
 // =============================================================================
@@ -1080,7 +887,7 @@ ruleDeclaration
  *   annotate @experimental {  experimental feature  }
  */
 annotationDeclaration
-    : At identifier typeOptions? (Assigment annotationContext)?
+    : At identifier typeOptions? (Assignment annotationContext)?
     ;
 
 /**
@@ -1106,9 +913,8 @@ headlessFunction
 /**
 * Returnable is an statement that returns something. it can return another headless function, or a canonical expression
 */
-// TODO: returnable should be implemented the correct way
 returnable
-    : Return
+    : Return expression
     ;
 
 /**
@@ -1197,18 +1003,14 @@ commaSeparatedTypedIdentifiers
  * Unified identifier - supports all identifier types from lexer
  * Provides flexibility for naming conventions across different domains
  *
- * Types:
- *   - SIMPLE_ID: Traditional programming identifiers (foo, bar_baz)
- *   - COMPLEX_ID: Unicode identifiers with special characters (α, β₁, special-name)
- *   - QUOTED_ID: Quoted identifiers for reserved words (`class`, `type`)
+ *
  */
 identifier
-    : IdentifierOrSoftKeyword
-    | LatexStyleIdentifier
+    : LatexStyleIdentifier
+    | SimpleIdentifier
+    | MathematicalUnicodeFamily
     ;
-
+// TODO: Literals should contains Strings, Numbers and Identifiers
 literal
     : identifier
-    | Number
-    | DecimalNumber
     ;
