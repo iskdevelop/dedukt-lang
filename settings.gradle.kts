@@ -8,5 +8,4 @@
 rootProject.name = "dedukt-lang"
 
 include(":parser")
-include(":interpreter")
 include(":core")

@@ -11,12 +11,14 @@ group = "com.iskportal.dedukt.kernel"
 version = "0.0.1-SNAPSHOT"
 dependencies {
 
+    implementation(project(":core"))
     antlr("org.antlr:antlr4:4.+")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation(libs.junit.jupiter.engine)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation(libs.guava)
+
 }
 
 java {
