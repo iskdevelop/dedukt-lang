@@ -9,6 +9,7 @@ enum class DeclarationType {
     STRUCTURE,
     THEORY,
     ANNOTATION,
+    RULE,
     CONTEXT;
     fun isType() = this == TYPE
     fun isFunction() = this == FUNCTION
@@ -19,6 +20,7 @@ enum class DeclarationType {
     fun isTheory() = this == THEORY
     fun isAnnotation() = this == ANNOTATION
     fun isContext() = this == CONTEXT
+    fun isRule() = this == RULE
 
     override fun toString(): String {
         return when (this) {
@@ -31,6 +33,7 @@ enum class DeclarationType {
             THEORY -> "theory"
             ANNOTATION -> "annotation"
             CONTEXT -> "context"
+            RULE -> "rule"
         }
     }
 }
