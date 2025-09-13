@@ -1,6 +1,6 @@
 package headerTests
 
-import com.iskportal.dedukt.lang.processor.DeduktASTProcessor
+import com.iskportal.dedukt.lang.processor.DeProcessor
 import kotlin.test.Test
 
 class DeduktHeadSectionTests {
@@ -16,7 +16,7 @@ class DeduktHeadSectionTests {
             $standardPackageDeclaration
             """
         // Parsing the source code
-        val processor = DeduktASTProcessor()
+        val processor = DeProcessor()
         val packageDeclaration = processor.parse(sourceCode).packageDeclaration()
         val packageInfo = packageDeclaration.packageIdentifier()
 
@@ -38,7 +38,7 @@ class DeduktHeadSectionTests {
             $standardPackageDeclaration
             """
         // Parsing the source code
-        val processor = DeduktASTProcessor()
+        val processor = DeProcessor()
         val packageDeclaration = processor.parse(sourceCode).packageDeclaration()
         val packageInfo = packageDeclaration.packageIdentifier()
 
@@ -68,7 +68,7 @@ class DeduktHeadSectionTests {
         val numberOfUniqueImports = 2
 
         // Parsing the source code
-        val processor = DeduktASTProcessor()
+        val processor = DeProcessor()
         val importList = processor.parse(sourceCode).importList().importStatement().toList()
         val importInfo = importDeclaration.
 

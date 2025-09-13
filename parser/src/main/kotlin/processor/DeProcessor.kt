@@ -8,12 +8,17 @@ import org.antlr.v4.runtime.CommonTokenStream
 /**
  * Enhanced source code processor for DeduKt language with powerful AST querying capabilities
  */
-class DeduktASTProcessor {
-
-
+class DeProcessor {
 
     /**
-     * Parse source code and return the AST root
+     * Generates source code data class
+     */
+    fun toSourceCode() : SourceCode {
+
+    }
+
+    /**
+     * Returns the parser of Dedukt.
      */
     fun parse(input: String): DeduktParser {
         val inputStream = CharStreams.fromString(input)
