@@ -67,7 +67,7 @@ packageIdentifierNode
     : SimpleIdentifier
     | Package | Import | Type | Where | If | Else | Case | Default | When | Gaurd | For | While | Do | Break | BreakAt
     | Continue | ContinueAt | Return | ReturnAt | Jump | Val | Var | Const | Throw | Catch | Finally | Try | Assert
-    | Debug | Context | Notation | Axiom | Fun | Operator | Structure | Theory | Rule | Abstract ;
+    | Debug | Context | Notation | Axiom | Fun | Operator | Structure | Theory | Rule | Abstract | True | False;
 
 
 /**
@@ -130,7 +130,7 @@ statement
 *   if condition then action
 */
 application
-   : expression (SemiColon expression)*
+   : expression SemiColon?
    | conditional
    | loop
    | jump
@@ -140,7 +140,6 @@ application
 //   | memoryOperation
    | debugOperation
    ;
-
 /**
 * Main expression rule - entry point for all expression parsing
 * Delegates to chain expressions which have the highest precedence
@@ -148,75 +147,57 @@ application
 *
 * Syntax: <chainExpression>
 */
-expression
-   : chainExpression             // Highest precedence: chains
-   ;
 
 /**
-* Chain expressions - left-associative operator chains
-* Handles method chaining, property access, and function composition
-* Primary expressions can be chained with dot operators or juxtaposed
+* Chain expressions - hierarchical chaining with proper tree structure
+* Each chain operation creates a parent-child relationship in the AST
+* Left-recursive rule that builds the tree incrementally
 *
-* Syntax: <primary> [<chainOp> | <primary>]*
-* Examples:
-*   object.method{args}.property
-*   func{x} transform{y}
-*   data.filter{condition}.map{transform}
+* Syntax: <chainExpression> <chainOp> | <primaryExpression>
+* Tree structure: first.second.third creates first -> second -> third hierarchy
 */
-chainExpression
-   : primaryExpression (chainOperator | primaryExpression)*
+expression
+   : expression primaryExpression // Juxtaposition (function application)
+   | primaryExpression                 // Base case: single primary expression
    ;
 
 /**
 * Chain operators - operators for chaining expressions
-* Supports method calls, headless functions, and property access
-* All use dot notation for consistent syntax
+* Each operator type creates a specific parent-child relationship
+* The left-recursive structure ensures proper tree building
 *
 * Syntax: .<identifier>{<args>} | .{<expressions>} | .<identifier>
 * Examples:
-*   .method{arg1, arg2}    // Method call
-*   .{x -> x + 1}          // Headless function application
-*   .property              // Property access
+*   .method{arg1, arg2}    // Method call becomes child of previous expression
+*   .{x -> x + 1}          // Headless function application as child
+*   .property              // Property access as child
 */
 chainOperator
-   : Dot functionCall             // .identifier{args}
-   | Dot headlessFunction         // .{expressions}
-   | Dot identifier               // .property
+   : (identifier | literal) Dot functionCall             // .identifier{args}
+   | (identifier | literal) Dot headlessFunction         // .{expressions}
+   | (identifier | literal) Dot identifier               // .property
    ;
 
 /**
 * Primary expressions - atomic expression units
 * Base cases for the expression grammar hierarchy
-* Includes literals, functions, calls, and parenthesized expressions
+* Removed multipleIdentifiers to avoid confusion with juxtaposition
 *
-* Syntax: <identifiers> | {<expressions>} | <identifier>{<args>} | (<expression>)
+* Syntax: <identifier> | {<expressions>} | <identifier>{<args>} | (<expression>)
 * Examples:
-*   variable constant        // Multiple identifiers
-*   {x -> x * 2}            // Headless function
-*   calculate{a, b, c}      // Function call
-*   (x + y) * z             // Parenthesized expression
+*   variable               // Single identifier
+*   {x -> x * 2}          // Headless function
+*   calculate{a, b, c}    // Function call
+*   (x + y) * z           // Parenthesized expression
 */
 primaryExpression
-   : multipleIdentifiers           // Case 1: multiple identifiers
-   | headlessFunction             // Case 2: headless function
-   | functionCall                 // Case 3: function call
-   | LParen expression RParen     // Case 4: compound expression (parentheses)
+   : multipleIdentifiers                   // Case 1: single identifier
+   | headlessFunction            // Case 3: headless function
+   | functionCall                // Case 4: function call
+   | LParen expression RParen    // Case 5: compound expression (parentheses)
+   | lateAssignment              // Case 6: late assignment
    ;
 
-/**
-* Multiple identifiers - sequence of adjacent literals/identifiers
-* Supports juxtaposition for function application or data construction
-* At least one literal must be present, followed by zero or more
-*
-* Syntax: <literal> [<literal>]*
-* Examples:
-*   Vector 3 4 5           // Constructor with arguments
-*   map transform data     // Function application chain
-*   x y z                  // Variable sequence
-*/
-multipleIdentifiers
-   : literal literal*
-   ;
 
 /**
 * Function call - identifier followed by argument list in curly braces
@@ -246,6 +227,12 @@ functionCall
 argumentList
    : expression (Comma expression)*
    ;
+multipleIdentifiers
+    : atomExpression+
+    ;
+atomExpression
+    : identifier    | chainOperator  | literal
+    ;
 // =============================================================================
 // CONDITIONAL STATEMENTS - Branching Control Flow
 // =============================================================================
@@ -258,7 +245,7 @@ argumentList
  */
 conditional
     : ifStatement
-    | caseStatement
+//    | caseStatement
     | whenStatement
     | guardStatement
     | ternaryExpression
@@ -275,9 +262,18 @@ conditional
  *   if x > 0 then positive elif x < 0 then negative else zero
  */
 ifStatement
-    : If expression (Arrow expression | headlessFunction) (Else If expression (Arrow expression | headlessFunction))? (Else (Arrow expression | headlessFunction))?
+    : mainConditional elseIfConditionals* elseStatement
     ;
 
+mainConditional
+    : If expression (Arrow  LBrace statement+ RBrace)
+    ;
+elseIfConditionals
+    : (Else If expression (Arrow  LBrace statement+ RBrace))
+    ;
+elseStatement
+    : (Else (Arrow  LBrace statement+ RBrace))?
+    ;
 /**
  * Case statement - pattern matching and multi-way branching
  * Supports pattern matching on values, types, and structure
@@ -288,10 +284,10 @@ ifStatement
  *   case shape of Circle{r} -> area{r} | Rectangle{w, h} -> w * h
  */
 caseStatement
-    : Case expression Arrow expression
+    : Case expression Arrow (expression | returnable)
     ;
 defaultStatement
-    : Default expression
+    : Default (expression | returnable)
     ;
 caseStatements
     : caseStatement+ defaultStatement
@@ -306,7 +302,10 @@ caseStatements
  *   when hasPermission -> allow | isGuest -> restricted | else -> deny
  */
 whenStatement
-    : When expression ((Vert expression Arrow expression)+ Vert defaultStatement | LBrace caseStatements RBrace)
+    : When proposedExpression LBrace caseStatements RBrace
+    ;
+proposedExpression
+    : expression
     ;
 
 /**
@@ -315,11 +314,10 @@ whenStatement
  *
  * Syntax: guard <condition> else <action>
  * Examples:
- *   guard isValid else return error
  *   guard hasAccess else throw unauthorized
  */
 guardStatement
-    : Gaurd expression Else Return expression
+    : Gaurd expression (Else Throw expression)?
     ;
 
 /**
@@ -350,7 +348,7 @@ loop
     | doWhileLoop
     ;
 loopBody
-    : (Arrow expression | headlessFunction)
+    : (Arrow expression | LBrace statement+ RBrace)
     ;
 /**
  * For loop - counted iteration with initialization, condition, and increment
@@ -420,7 +418,7 @@ jump
  *   break@ outerLoop        // Break from labeled loop
  */
 breakStatement
-    : Break | BreakAt identifier
+    : Break | BreakAt expression
     ;
 
 /**
@@ -433,7 +431,7 @@ breakStatement
  *   continue outerLoop     // Continue labeled loop
  */
 continueStatement
-    : Continue | ContinueAt identifier
+    : Continue | ContinueAt expression
     ;
 
 /**
@@ -447,7 +445,7 @@ continueStatement
  *   return calculate{x, y} // Return expression result
  */
 returnStatement
-    : Return | ReturnAt identifier
+    : (Return | ReturnAt) expression
     ;
 
 /**
@@ -475,6 +473,8 @@ gotoStatement
  */
 variableOperation
     : assignment
+    | lateAssignment
+    | lateAssignmentDef
     ;
 
 /**
@@ -490,8 +490,12 @@ variableOperation
 assignment
     : (Val | Var | Const)? identifier subTyping Assignment expression
     ;
-
-
+lateAssignmentDef
+    : LateInit (Val | Var | Const) identifier subTyping
+    ;
+lateAssignment
+    : identifier Assignment expression
+    ;
 
 // =============================================================================
 // ERROR HANDLING APPLICATIONS - Exception Management
@@ -564,7 +568,7 @@ debugOperation
  *   assert length{list} > 0, "List cannot be empty"
  */
 assertStatement
-    : Assert expression
+    : Assert expression Comma expression
     ;
 
 /**
@@ -578,7 +582,7 @@ assertStatement
  *   debug { "Current state:", state }
  */
 debugStatement
-    : Annotation Debug
+    : Annotation Debug statement
     ;
 
 // =============================================================================
@@ -743,7 +747,7 @@ applicability
  *   { ... }  // Anonymous context
  */
 contextDeclaration
-    : Context identifier? headlessFunction
+    : Context identifier? LBrace statement+ RBrace
     ;
 
 // =============================================================================
@@ -907,7 +911,7 @@ annotationContext
  * Used for general-purpose scoping and evaluation
  */
 headlessFunction
-    : LBrace statement*  returnable? RBrace
+    : LBrace statement*  returnable RBrace
     ;
 
 /**
@@ -1013,4 +1017,11 @@ identifier
 // TODO: Literals should contains Strings, Numbers and Identifiers
 literal
     : identifier
+    | boolean
+    | Number
+    | StringLiteral
+    ;
+boolean
+    : True
+    | False
     ;

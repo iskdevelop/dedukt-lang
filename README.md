@@ -51,8 +51,8 @@ This repository focuses on the core language implementation that powers all thre
 
 ## Project Status
 
-**Current Version**: 0.0.1-SNAPSHOT (Development)  
-**Target Release**: 0.1.0 (Late 2024)
+**Current Version**: 0.0.3-SNAPSHOT (Development)  
+**Target Release**: 0.1.0 (Early 2026)
 
 The project is currently in active development, with the language kernel being tested and expanded. The first stable release (0.1.0) will mark the initial public availability of the core symbolic reasoning capabilities.
 

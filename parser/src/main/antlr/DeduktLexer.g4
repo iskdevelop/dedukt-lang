@@ -49,9 +49,11 @@ Structure: 'structure';
 Theory: 'theory';
 Rule: 'rule';
 Abstract: 'abstract';
-
+True: 'true';
+False: 'false';
+LateInit: 'lateinit';
 LatexStyleIdentifier
-    : '\\' [a-zA-Z_][a-zA-Z0-9_]*
+    : '\\' [a-zA-Z_][a-zA-Z_]*
     ;
 MathematicalUnicodeFamily
     : [+\-*/!^]       // ASCII operators
@@ -102,6 +104,9 @@ IdentifierOrSoftKeyword
     | Theory
     | Rule
     | Abstract
+    | True
+    | False
+    | LateInit
     ;
 // Symbols
 Vert : '|';
@@ -126,8 +131,12 @@ DoubleColon : '::';
 Arrow : '->';
 QuestionMark : '?';
 Assignment : '=';
-Number: [0-9]+ ;
-DecimalNumber : Number Dot Number;
+Number
+    : DigitArray
+    | DecimalNumber
+    ;
+DigitArray: [0-9]+ ;
+DecimalNumber : DigitArray Dot DigitArray;
 StringLiteral
     : '"' ( ~["\\] | '\\' . )* '"'
     | '\'' ( ~['\\] | '\\' . )* '\''

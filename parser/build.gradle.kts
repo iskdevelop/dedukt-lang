@@ -8,7 +8,7 @@ repositories {
     mavenCentral()
 }
 group = "com.iskportal.dedukt.kernel"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.3-SNAPSHOT"
 dependencies {
 
     implementation(project(":core"))
